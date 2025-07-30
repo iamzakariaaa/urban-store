@@ -25,6 +25,7 @@ interface ProductDetailPageProps {
   productId: number;
   onPageChange: (page: Page, productId?: number) => void;
 }
+
 export default function ProductDetailPage({ productId, onPageChange }: ProductDetailPageProps) {
   const dispatch = useAppDispatch();
   const product = useAppSelector(selectCurrentProduct);

@@ -1,56 +1,119 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import UserTab from './UserTab';
-import ProductTab from './ProductTab';
-import type { Page } from '../utils/Page';
+import AdminSidebar from '../components/AdminSidebar';
+import ProductsSection from '../components/ProductsSection';
+import UsersSection from '../components/UsersSection';
+import { useAppSelector } from '../app/hooks';
+import { selectDarkMode } from '../features/ui/uiSlice';
 
+type AdminSection = 'products' | 'users' | 'analytics' | 'settings';
 
-
-type Tab = 'products' | 'users';
 interface AdminPanelPageProps {
-  onPageChange: (page: Page, productId?: number) => void;
+  onPageChange: (page: string) => void;
 }
 
 const AdminPanelPage: React.FC<AdminPanelPageProps> = ({ onPageChange }) => {
-  const [activeTab, setActiveTab] = useState<Tab>('products');
+  const darkMode = useAppSelector(selectDarkMode);
+  const [activeSection, setActiveSection] = useState<AdminSection>('products');
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'products':
+        return <ProductsSection />;
+      case 'users':
+        return <UsersSection />;
+      case 'analytics':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div>
+              <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                Analytics
+              </h1>
+              <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                View your store performance
+              </p>
+            </div>
+            <div className={`p-12 text-center rounded-xl ${
+              darkMode ? 'bg-gray-900 border border-gray-800' : 'bg-white border border-gray-200'
+            }`}>
+              <div className={`text-6xl mb-4 ${darkMode ? 'text-gray-700' : 'text-gray-300'}`}>
+                📊
+              </div>
+              <h3 className={`text-lg font-medium mb-2 ${
+                darkMode ? 'text-gray-300' : 'text-gray-900'
+              }`}>
+                Analytics Coming Soon
+              </h3>
+              <p className={`${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                Advanced analytics and reporting features will be available here
+              </p>
+            </div>
+          </motion.div>
+        );
+      case 'settings':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div>
+              <h1 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                Settings
+              </h1>
+              <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Configure your store settings
+              </p>
+            </div>
+            <div className={`p-12 text-center rounded-xl ${
+              darkMode ? 'bg-gray-900 border border-gray-800' : 'bg-white border border-gray-200'
+            }`}>
+              <div className={`text-6xl mb-4 ${darkMode ? 'text-gray-700' : 'text-gray-300'}`}>
+                ⚙️
+              </div>
+              <h3 className={`text-lg font-medium mb-2 ${
+                darkMode ? 'text-gray-300' : 'text-gray-900'
+              }`}>
+                Settings Panel Coming Soon
+              </h3>
+              <p className={`${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+                Store configuration and settings will be available here
+              </p>
+            </div>
+          </motion.div>
+        );
+      default:
+        return <ProductsSection />;
+    }
+  };
 
   return (
-    <div className="pt-20 min-h-screen bg-gray-50">
-      <motion.div
-        className="max-w-7xl mx-auto px-6 py-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <h1 className="text-4xl font-bold mb-8">Admin Panel</h1>
+    <div className={`min-h-screen ${darkMode ? 'bg-black' : 'bg-gray-50'}`}>
+      {/* Sidebar */}
+      <AdminSidebar
+        activeSection={activeSection}
+        onSectionChange={setActiveSection}
+        onPageChange={onPageChange}
+      />
 
-        {/* Tab Navigation */}
-        <nav className="mb-8 flex space-x-8 border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab('products')}
-            className={`pb-2 border-b-2 font-medium text-sm ${
-              activeTab === 'products'
-                ? 'border-black text-black'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+      {/* Main Content */}
+      <div className="ml-64 pt-6">
+        <div className="max-w-7xl mx-auto px-6 py-15">
+          <motion.div
+            key={activeSection}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            Products
-          </button>
-          <button
-            onClick={() => setActiveTab('users')}
-            className={`pb-2 border-b-2 font-medium text-sm ${
-              activeTab === 'users'
-                ? 'border-black text-black'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
-          >
-            Users
-          </button>
-        </nav>
-
-        {/* Tab Content */}
-        {activeTab === 'products' ? <ProductTab onPageChange={onPageChange} /> : <UserTab onPageChange={onPageChange} />}
-      </motion.div>
+            {renderSection()}
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 };
