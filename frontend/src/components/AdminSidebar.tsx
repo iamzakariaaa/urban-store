@@ -30,9 +30,9 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
+    { id: 'analytics' as AdminSection, label: 'Analytics', icon: BarChart3 },
     { id: 'products' as AdminSection, label: 'Products', icon: Package },
     { id: 'users' as AdminSection, label: 'Users', icon: Users },
-    { id: 'analytics' as AdminSection, label: 'Analytics', icon: BarChart3 },
     { id: 'settings' as AdminSection, label: 'Settings', icon: Settings },
   ];
 
@@ -48,7 +48,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
       animate={{ x: 0, width: collapsed ? 72 : 256 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      {/* Top bar with collapse toggle and optional title */}
+     
       <div
         className={`flex items-center justify-between ${navPadding} border-b ${
           darkMode ? 'border-gray-800' : 'border-gray-200'
@@ -60,7 +60,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
               darkMode ? 'text-white' : 'text-black'
             }`}
           >
-            Admin
+            Admin Panel
           </span>
         )}
         <motion.button

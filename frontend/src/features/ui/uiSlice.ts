@@ -15,7 +15,7 @@ interface UIState {
 }
 
 const initialState: UIState = {
-  darkMode: true,
+  darkMode: false,
   mobileMenuOpen: false,
   notifications: [],
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Edit2, Trash2, Eye } from 'lucide-react';
+import { Edit, Trash2, Eye } from 'lucide-react';
 import { useAppSelector } from '../app/hooks';
 import { selectDarkMode } from '../features/ui/uiSlice';
 
@@ -121,11 +121,11 @@ const DataTable: React.FC<DataTableProps> = ({
                           onClick={() => onEdit(row)}
                           className={`transition-colors ${
                             darkMode
-                              ? 'text-green-400 hover:text-green-300'
-                              : 'text-green-600 hover:text-green-800'
+                              ? 'text-blue-400 hover:text-green-300'
+                              : 'text-blue-600 hover:text-green-800'
                           }`}
                         >
-                          <Edit2 size={16} />
+                          <Edit size={16} />
                         </button>
                       )}
                       {onDelete && (
