@@ -3,6 +3,7 @@ export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'C
 export interface OrderItemDTO {
   id: number;
   productId: number;
+  productName:string;
   quantity: number;
   price: number;
   subTotal: number;

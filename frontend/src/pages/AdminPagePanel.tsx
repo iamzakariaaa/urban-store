@@ -7,11 +7,12 @@ import AnalyticsSection from '../components/AnalyticsSection';
 import SettingsSection from '../components/SettingsSection';
 import { useAppSelector } from '../app/hooks';
 import { selectDarkMode } from '../features/ui/uiSlice';
+import type { Page } from '../utils/Page';
 
 type AdminSection = 'products' | 'users' | 'analytics' | 'settings';
 
 interface AdminPanelPageProps {
-  onPageChange: (page: string) => void;
+  onPageChange: (page: Page, productId?: number) => void;
 }
 
 const AdminPanelPage: React.FC<AdminPanelPageProps> = ({ onPageChange }) => {

@@ -10,7 +10,14 @@ export const ordersApi = apiSlice.injectEndpoints({
         headers: { 'X-User-ID': userId },
       }),
     }),
+    getOrdersByUserId: builder.query<OrderResponse[], string>({
+      query: (userId) => `/orders/user/${userId}`,
+    }),
   }),
 });
 
-export const { useCreateOrderMutation } = ordersApi;
+export const {
+  useCreateOrderMutation,
+  useGetOrdersByUserIdQuery,
+} = ordersApi;
+

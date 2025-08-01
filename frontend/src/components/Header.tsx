@@ -39,7 +39,7 @@ function Header({ currentPage, onPageChange }: HeaderProps) {
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className=" mx-6 flex items-center justify-between">
           <motion.div
             className="flex items-center space-x-8"
             initial={{ opacity: 0 }}
@@ -50,7 +50,7 @@ function Header({ currentPage, onPageChange }: HeaderProps) {
               onClick={() => onPageChange('home')}
               className={`text-2xl font-bold tracking-wider transition-colors ${darkMode ? 'hover:text-gray-300' : 'hover:text-gray-600'}`}
             >
-              URBAN
+              DRIPp.
             </button>
 
             <nav className="hidden md:flex space-x-6">

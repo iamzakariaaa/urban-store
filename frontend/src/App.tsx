@@ -15,6 +15,7 @@ import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import type { Page } from './utils/Page';
 import AdminPanelPage from './pages/AdminPagePanel';
+import UserProfilePage from './pages/UserProfilePage';
 
 
 
@@ -41,6 +42,8 @@ function AppContent() {
     switch (currentPage) {
       case 'home':
         return <HomePage onPageChange={handlePageChange} />;
+        case 'profile':
+        return <UserProfilePage onPageChange={handlePageChange} />;
       case 'products':
         return <ProductListingPage onPageChange={handlePageChange} />;
       case 'product':

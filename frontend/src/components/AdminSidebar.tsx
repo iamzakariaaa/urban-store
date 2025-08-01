@@ -12,13 +12,14 @@ import {
 } from 'lucide-react';
 import { useAppSelector } from '../app/hooks';
 import { selectDarkMode } from '../features/ui/uiSlice';
+import type { Page } from '../utils/Page';
 
 type AdminSection = 'products' | 'users' | 'analytics' | 'settings';
 
 interface AdminSidebarProps {
   activeSection: AdminSection;
   onSectionChange: (section: AdminSection) => void;
-  onPageChange: (page: string) => void;
+  onPageChange: (page: Page, productId?: number) => void;
 }
 
 const AdminSidebar: React.FC<AdminSidebarProps> = ({
@@ -37,7 +38,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
   ];
 
   const sidebarBg = darkMode ? 'bg-black border-gray-800' : 'bg-white border-gray-200';
-  const navPadding = collapsed ? 'p-2' : 'p-4';
+  const navPadding = collapsed ? 'p-2' : 'px-4 py-2';
   const itemPadding = collapsed ? 'px-2 py-3' : 'px-4 py-3';
   const bottomPadding = collapsed ? 'p-2' : 'p-4';
 
@@ -56,11 +57,11 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({
       >
         {!collapsed && (
           <span
-            className={`text-lg font-semibold ${
+            className={`text-sm font-light ${
               darkMode ? 'text-white' : 'text-black'
             }`}
           >
-            Admin Panel
+            Welcome to your Admin Panel
           </span>
         )}
         <motion.button
