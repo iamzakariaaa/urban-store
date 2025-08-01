@@ -6,10 +6,9 @@ import com.store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -24,4 +23,11 @@ public class OrderController {
                 .map(orderResponse -> new ResponseEntity<>(orderResponse, HttpStatus.CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponse>> getOrdersByUserId(@PathVariable String userId) {
+        List<OrderResponse> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
+    }
+
+
 }

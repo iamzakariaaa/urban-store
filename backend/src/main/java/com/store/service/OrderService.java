@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -60,7 +61,16 @@ public class OrderService {
         cartService.clearCart(userId);
         return Optional.of(mapToOrderResponse(savedOrder));
     }
-        private OrderResponse mapToOrderResponse(Order order) {
+    //Orders History
+    public List<OrderResponse> getOrdersByUserId(String userId) {
+        List<Order> orders = orderRepository.findByUserId(Long.parseLong(userId));
+        return orders.stream()
+                .map(this::mapToOrderResponse)
+                .collect(Collectors.toList());
+    }
+
+
+    private OrderResponse mapToOrderResponse(Order order) {
             return new OrderResponse(
                     order.getId(),
                     order.getTotalAmount(),
@@ -69,6 +79,7 @@ public class OrderService {
                             .map(orderItem -> new OrderItemDTO(
                                     orderItem.getId(),
                                     orderItem.getProduct().getId(),
+                                    orderItem.getProduct().getName(),
                                     orderItem.getQuantity(),
                                     orderItem.getPrice(),
                                     orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity()))
@@ -77,5 +88,7 @@ public class OrderService {
                     order.getCreatedAt()
             );
         }
+
+
 
     }
