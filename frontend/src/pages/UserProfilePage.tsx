@@ -5,8 +5,6 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { 
   setEditMode,
   selectUserEditMode,
-  selectSelectedUserId,
-  setSelectedUserId
 } from '../features/users/usersSlice';
 import { 
   useGetUserQuery,
@@ -21,6 +19,8 @@ import type { UserRequest } from '../types/user';
 import type { Page } from '../utils/Page';
 import { useGetOrdersByUserIdQuery } from '../features/orders/ordersApi';
 import type { OrderStatus } from '../types/order';
+import { selectUser, setUser } from '../features/auth/authSlice';
+import { skipToken } from '@reduxjs/toolkit/query';
 
 interface UserProfilePageProps {
   onPageChange: (page: Page, productId?: number) => void;
@@ -29,18 +29,20 @@ interface UserProfilePageProps {
 const UserProfilePage: React.FC<UserProfilePageProps> = ({ onPageChange }) => {
   const dispatch = useAppDispatch();
   const editMode = useAppSelector(selectUserEditMode);
-  const selectedUserId = useAppSelector(selectSelectedUserId);
+   const authUser = useAppSelector(selectUser);
   const darkMode = useAppSelector(selectDarkMode);
   
-  // Set default user ID 
-  const currentUserId = selectedUserId || 1;
-  
-  const { 
-    data: user, 
-    isLoading, 
-    error,
-    refetch
-  } = useGetUserQuery(currentUserId);
+ 
+  const currentUserId = authUser?.id;
+
+  const { data: user, isLoading, error, refetch } = useGetUserQuery(currentUserId ?? skipToken);
+
+
+  useEffect(() => {
+    if (user) {
+      dispatch(setUser(user));
+    }
+  }, [user, dispatch]);
   
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   
@@ -64,65 +66,33 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({ onPageChange }) => {
     isLoading: ordersLoading,
     isError: ordersError,
     refetch: refetchOrders,
-  } = useGetOrdersByUserIdQuery(currentUserId);
+  } = useGetOrdersByUserIdQuery(currentUserId ?? skipToken)
 
   useEffect(() => {
-  refetchOrders();
+  if (currentUserId) {
+    refetchOrders();
+  }
 }, [currentUserId, refetchOrders]);
 
- /*  const mockOrders = [
-    {
-      id: '1',
-      userId: '1',
-      items: [
-        { id: '1', name: 'Essential Hoodie', quantity: 1, price: 120 },
-        { id: '2', name: 'Urban Jacket', quantity: 1, price: 200 }
-      ],
-      total: 320.00,
-      status: 'delivered',
-      createdAt: '2024-01-15'
-    },
-    {
-      id: '2',
-      userId: '1',
-      items: [
-        { id: '3', name: 'Street Joggers', quantity: 2, price: 85 }
-      ],
-      total: 170.00,
-      status: 'processing',
-      createdAt: '2024-01-20'
-    },
-    {
-      id: '3',
-      userId: '1',
-      items: [
-        { id: '4', name: 'Minimal Tee', quantity: 3, price: 45 }
-      ],
-      total: 135.00,
-      status: 'shipped',
-      createdAt: '2024-01-25'
-    }
-  ];
- */
-  // Set user ID on component mount
-  useEffect(() => {
-    if (!selectedUserId) {
-      dispatch(setSelectedUserId(1));
-    }
-  }, [dispatch, selectedUserId]);
-  
 
   useEffect(() => {
-    if (user) {
-      setFormData({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        address: user.address
-      });
-    }
-  }, [user]);
+  if (user) {
+    setFormData({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      address: user.address ?? {
+        street: '',
+        city: '',
+        state: '',
+        country: '',
+        zipCode: ''
+      },
+    });
+  }
+}, [user]);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -144,22 +114,20 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({ onPageChange }) => {
   };
 
   const handleSave = async () => {
-    if (!user) return;
-    
-    try {
-      await updateUser({ 
-        id: user.id, 
-        user: formData 
-      }).unwrap();
-      
-      toast.success('Profile updated successfully!');
-      dispatch(setEditMode(false));
-      refetch(); // Refresh user data
+  if (!user) return;
+
+  try {
+    const result = await updateUser({ id: user.id, user: formData }).unwrap();
+    console.log(result); 
+    toast.success('Profile updated successfully!');
+    dispatch(setEditMode(false));
+    refetch();
     } catch (error) {
       console.error('Failed to update user:', error);
       toast.error('Failed to update profile');
     }
   };
+
 
   const handleCancel = () => {
     if (user) {
@@ -188,7 +156,6 @@ const getStatusColor = (status: OrderStatus) => {
       return darkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-800';
   }
 };
-
 
   if (isLoading) {
     return (

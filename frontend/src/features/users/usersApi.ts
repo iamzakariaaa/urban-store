@@ -17,13 +17,15 @@ export const usersApi = apiSlice.injectEndpoints({
         body: user,
       }),
     }),
-    updateUser: builder.mutation<string, { id: string; user: UserRequest }>({
+    updateUser: builder.mutation<string, { id: number; user: UserRequest }>({
       query: ({ id, user }) => ({
         url: `/users/${id}`,
         method: 'PUT',
         body: user,
       }),
+      transformResponse: (response: string) => response, 
     }),
+
   }),
 });
 

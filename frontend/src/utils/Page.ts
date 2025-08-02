@@ -1,2 +1,2 @@
 
-export type Page = 'home' | 'products' | 'product' | 'profile' | 'admin'; 
+export type Page = 'home' | 'products' | 'product' | 'profile' | 'admin' | 'login' | 'signup'; 

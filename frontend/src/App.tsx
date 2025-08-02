@@ -1,4 +1,4 @@
-import React, {  useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,12 +16,12 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import type { Page } from './utils/Page';
 import AdminPanelPage from './pages/AdminPagePanel';
 import UserProfilePage from './pages/UserProfilePage';
-
-
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function AppContent() {
-  const [currentPage, setCurrentPage] = React.useState<Page>('home');
-  const [selectedProductId, setSelectedProductId] = React.useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const darkMode = useAppSelector(selectDarkMode);
 
   const handlePageChange = (page: Page, productId?: number) => {
@@ -42,33 +42,30 @@ function AppContent() {
     switch (currentPage) {
       case 'home':
         return <HomePage onPageChange={handlePageChange} />;
-        case 'profile':
+      case 'profile':
         return <UserProfilePage onPageChange={handlePageChange} />;
       case 'products':
         return <ProductListingPage onPageChange={handlePageChange} />;
       case 'product':
-         return selectedProductId !== null ? (
-            <ProductDetailsPage
-              productId={selectedProductId}
-              onPageChange={handlePageChange}
-            />
-          ) : (
-            
-            <HomePage onPageChange={handlePageChange} />
-          );
-          case 'admin': // Add this case for admin panel
-          return <AdminPanelPage onPageChange={handlePageChange} />;
-          default:
-          return <HomePage onPageChange={handlePageChange} />;
+        return selectedProductId !== null ? (
+          <ProductDetailsPage productId={selectedProductId} onPageChange={handlePageChange} />
+        ) : (
+          <HomePage onPageChange={handlePageChange} />
+        );
+      case 'admin':
+        return <AdminPanelPage onPageChange={handlePageChange} />;
+        case 'login':
+        return <LoginPage onPageChange={handlePageChange} />;
+      case 'signup':
+        return <SignupPage onPageChange={handlePageChange} />;
+      default:
+        return <HomePage onPageChange={handlePageChange} />;
     }
   };
 
   return (
     <div className={`min-h-screen font-sans transition-colors duration-300 ${darkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
-      <Header
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      <Header currentPage={currentPage} onPageChange={handlePageChange} />
 
       <CartDrawer />
 
