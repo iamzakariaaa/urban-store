@@ -18,7 +18,10 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
+    @Column(nullable = false)
+    private String password;
     private String phone;
+    @Enumerated(EnumType.ORDINAL)
     private UserRole role;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id", referencedColumnName = "id")

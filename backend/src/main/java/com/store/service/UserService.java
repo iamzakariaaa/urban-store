@@ -20,6 +20,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+
     public List<UserResponse> fetchAllUsers(){
         return userRepository.findAll().stream()
                 .map(this::mapToUserResponse)
@@ -61,7 +62,7 @@ public class UserService {
         }
     }
 
-    private UserResponse mapToUserResponse(User user){
+    public UserResponse mapToUserResponse(User user){
         UserResponse response = new UserResponse();
         response.setId(String.valueOf(user.getId()));
         response.setFirstName(user.getFirstName());
